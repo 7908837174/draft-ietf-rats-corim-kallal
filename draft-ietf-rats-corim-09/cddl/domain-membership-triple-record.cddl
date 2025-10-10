@@ -1,0 +1,4 @@
+domain-membership-triple-record = [
+  domain-id: domain-type
+  members: [ +  domain-type ]
+]

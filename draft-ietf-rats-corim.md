@@ -254,11 +254,6 @@ A measured object is part of the Attester's Target Environment.
 Expected, or "golden," Measurements are compiled as Reference Values, which are used by the Verifier to assess the trust state of the Attester.
 See also {{TNC.Arch}}, and Section 9.5.5 of {{TPM2.Part1}}.
 
-Measurement Key (mkey):
-: An optional identifier used to disambiguate multiple measurements of the same type or to distinguish multiple measured elements within the same Environment.
-Multiple measurement-map entries within the same Environment must populate mkey.
-See {{sec-comid-mkey}}.
-
 Reference Values:
 : A set of values that represent the desired or undesired state of an Attester.
 Reference Values are compared against Evidence to determine whether Attester state is corroborated by a Reference Value Provider.
@@ -274,14 +269,14 @@ See also Section 3.1 of {{?W3C.rdf11-primer}}.
 
 # Verifier Reconciliation {#sec-verifier-rec}
 
-This section describes the CoRIM format and documents how a Verifier must process the CoRIM.
+This specification describes the CoRIM format and documents how a Verifier must process the CoRIM.
 This ensures that the behaviour of the CoRIM-based appraisal is predictable and consistent, in a word deterministic.
 
 A Verifier needs to reconcile its various inputs, with CoRIM being one of them.
 In addition to the external CoRIM documents, the Verifier is expected to create an internal representation for each input and map each external representation to an internal one.
 By using the internal representation, the Verifier processes inputs as if they are part of a conversation, keeping track of who said what.
-The origin of the inputs is tracked as *authority*.
-The authority for the Claims in a CoRIM is the CoRIM issuer.
+The origin of the inputs is tracked as *Authority*.
+The Authority for the Claims in a CoRIM is the CoRIM issuer.
 To this effect, this specification defines one possible internal representation of the attester's actual state for use during the appraisal procedure, known as Appraisal Claims Set (ACS).
 
 Effectively, Attesters, Reference Value Providers, Endorsers, Verifier Owners, Relying Parties, and even the Verifier potentially all contribute to the conversation.
@@ -289,7 +284,7 @@ Each producer of corresponding RATS Conceptual Messages can assert Claims about 
 The Verifier's objective is to produce a list of Claims that describe the Attester's presumed actual state.
 Producers of RATS Conceptual Messages can assert contradictory assertions.
 For example, a compromised Attester may produce false claims that conflict with the Reference Values provided by a Reference Value Provider (RVP).
-In essence, if Evidence is not corroborated by an RVP's Claims, then the RVP's Claims are not included in the ACS.
+In essence, if Evidence is not corroborated by an RVP's Reference Values, then the RVP's Reference Values are not included in the ACS.
 
 A Verifier relies on input from appraisal policy to identify relevant assertions included in the ACS.
 For example, if a policy requires corroborated assertions issued by a particular RVP, then those assertions may be conveyed as Attestation Results.
@@ -307,7 +302,7 @@ The actual internal representation of a Verifier is implementation-specific and 
 Requirements for an internal representation of Conceptual Messages are defined in {{tbl-cmrr}}, where each Conceptual Message type has a structure as depicted by the *Structure* column.
 The internal representations used by this document are defined in {{sec-ir-cm}}.
 
-## Interacting with an ACS {#sec-interact-acs}
+## Interacting with an Appraisal Claims Set (ACS) {#sec-interact-acs}
 
 Conceptual Messages interact with an ACS by specifying criteria that should be met by the ACS and by presenting the assertions that should be added to the ACS if the criteria are satisfied.
 Internal representations of Conceptual Messages, ACS, and Attestation Results Set (ARS) SHOULD satisfy the following requirements for Verifier reconciliation and appraisal processing:
@@ -1059,7 +1054,7 @@ The following describes each member of the `measurement-values-map`.
 * `version` (index 0): Typically changes whenever the measured environment is updated.
   Described in {{sec-comid-version}}.
 
-* `svn` (index 1): The Security Version Number typically changes only when a security relevant change is made to the measured environment.
+* `svn` (index 1): The Security Version Number (SVN) typically changes only when a security relevant change is made to the measured environment.
   Described in {{sec-comid-svn}}.
 
 * `digests` (index 2): Contains the digest(s) of the measured environment
@@ -1133,7 +1128,7 @@ $version-scheme /= int / text
 
 ###### Security Version Number (SVN) {#sec-comid-svn}
 
-The following details the security version number (`svn`) and the minimum security version number (`min-svn`) statements.
+The following details the Security Version Number (`svn`) and the minimum Security Version Number (`min-svn`) statements.
 A security version number is used to track changes to an object (e.g., a secure enclave, a boot loader executable, a configuration file, etc.) that are security relevant.
 Rollback of a security relevant change is considered to be an attack vector; as such, security version numbers cannot be decremented.
 If a security relevant flaw is discovered in the Target Environment and is subsequently fixed, the `svn` value is typically incremented.
@@ -3369,9 +3364,12 @@ Environments (CoRE) Parameters" Registry {{!IANA.core-parameters}}:
 
 # Base CoRIM CDDL {#sec-corim-cddl}
 
+The following CDDL module formally defines the CoRIM data model:
+
 ~~~ cddl
 {::include cddl/corim-autogen.cddl}
 ~~~
+{: sourcecode-markers="true" sourcecode-name="corim.cddl"}
 
 # Acknowledgments
 {:unnumbered}
